@@ -1,12 +1,12 @@
 {
-  "name": "ts_repo",
+  "name": "typescript-assignment",
   "version": "1.0.0",
-  "description": "Цей репозиторій містить приклад проєкту на TypeScript, що демонструє базові налаштування компілятора та використання простих типів у програмі. Основні файли розташовані в гілці `develop`.",
-  "main": "index.js",
+  "description": "Гілка feature/tsconfig містить шаблон сторінки з інтерактивністю на TypeScript",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
 }
