@@ -1,46 +1,162 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Готовий Шаблон</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TypeScript Інтерактивна Сторінка</title>
+    <!-- W3.CSS framework and fonts -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+        /* Base typography */
+        html, body, h1, h2, h3, h4, h5, h6 {
+            font-family: "Roboto", sans‑serif;
+        }
+        /* Custom header scroll effect */
+        .header-scrolled {
+            background-color: rgba(0, 0, 0, 0.8) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        /* Posts cards */
+        .post-card {
+            background-color: #f5f5f5;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .post-card h3 {
+            margin-top: 0;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 6px;
+        }
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-modal:hover,
+        .close-modal:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Ласкаво просимо</h1>
-    <nav>
-      <ul>
-        <li><a href="#posts">Статті</a></li>
-        <li><a href="#about">Про нас</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <section id="hero">
-    <h2>Привіт!</h2>
-    <p>Це приклад макету сторінки з TypeScript.</p>
-    <button id="openModalBtn">Відкрити модальне вікно</button>
-  </section>
-
-  <section id="posts">
-    <h2>Публікації</h2>
-    <div id="postsContainer"></div>
-  </section>
-
-  <section id="about">
-    <h2>Про нас</h2>
-    <p>Ця сторінка була створена для демонстрації TypeScript, fetch API та анімацій.</p>
-  </section>
-
-  <!-- Modal -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <span id="closeModalBtn" class="close">&times;</span>
-      <p id="modalText">Це модальне вікно</p>
+    <!-- Top navigation bar -->
+    <div class="w3-top" id="topBar">
+        <div class="w3-bar w3-theme w3-left-align w3-large">
+            <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+            <a href="#home" class="w3-bar-item w3-button w3-theme-l1">Головна</a>
+            <a href="#posts" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Публікації</a>
+            <a href="#about" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Про нас</a>
+            <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Контакти</a>
+        </div>
     </div>
-  </div>
 
-  <script src="dist/script.js"></script>
+    <!-- Sidebar for mobile -->
+    <nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+        <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+            <i class="fa fa-remove"></i>
+        </a>
+        <h4 class="w3-bar-item"><b>Меню</b></h4>
+        <a class="w3-bar-item w3-button w3-hover-black" href="#home" onclick="w3_close()">Головна</a>
+        <a class="w3-bar-item w3-button w3-hover-black" href="#posts" onclick="w3_close()">Публікації</a>
+        <a class="w3-bar-item w3-button w3-hover-black" href="#about" onclick="w3_close()">Про нас</a>
+        <a class="w3-bar-item w3-button w3-hover-black" href="#contact" onclick="w3_close()">Контакти</a>
+    </nav>
+
+    <!-- Overlay effect for small screens -->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
+
+    <!-- Main content; margin-left will be applied for sidebar on large screens -->
+    <div class="w3-main" style="margin-left:250px" id="home">
+        <!-- Hero section -->
+        <header class="w3-container w3-center w3-padding-64">
+            <h1 class="w3-xxxlarge">Ласкаво просимо!</h1>
+            <p>Це приклад сторінки з TypeScript та W3.CSS.</p>
+            <button class="w3-button w3-teal w3-padding-large" onclick="openModal()">Відкрити модальне вікно</button>
+        </header>
+
+        <!-- Posts section -->
+        <section id="posts" class="w3-container w3-padding-64">
+            <h2 class="w3-text-teal">Останні публікації</h2>
+            <div id="postsContainer"></div>
+        </section>
+
+        <!-- About section -->
+        <section id="about" class="w3-container w3-padding-64 w3-light-grey">
+            <h2 class="w3-text-teal">Про нас</h2>
+            <p>Цей сайт демонструє використання готового шаблону та TypeScript для додавання інтерактивності. Тут ви можете побачити приклад завантаження даних, модальних вікон та ефектів прокручування.</p>
+        </section>
+
+        <!-- Contact section -->
+        <section id="contact" class="w3-container w3-padding-64">
+            <h2 class="w3-text-teal">Контакти</h2>
+            <p>Якщо у вас є питання, зв'яжіться з нами.</p>
+            <p><i class="fa fa-envelope w3-xlarge"></i> email@example.com</p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="w3-container w3-theme-l2 w3-padding-32">
+            <h4>Футер</h4>
+            <p>Цей сайт створено з використанням <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">W3.CSS</a> та TypeScript.</p>
+        </footer>
+    </div>
+
+    <!-- Modal dialog -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2>Привіт!</h2>
+            <p>Це модальне вікно відкривається за допомогою TypeScript.</p>
+        </div>
+    </div>
+
+    <!-- Sidebar toggle script (from original template) -->
+    <script>
+        // Get the Sidebar and overlay
+        var mySidebar = document.getElementById("mySidebar");
+        var overlayBg = document.getElementById("myOverlay");
+
+        function w3_open() {
+            if (mySidebar.style.display === 'block') {
+                mySidebar.style.display = 'none';
+                overlayBg.style.display = "none";
+            } else {
+                mySidebar.style.display = 'block';
+                overlayBg.style.display = "block";
+            }
+        }
+        function w3_close() {
+            mySidebar.style.display = "none";
+            overlayBg.style.display = "none";
+        }
+    </script>
+    <!-- Compiled TypeScript bundle -->
+    <script src="dist/script.js"></script>
 </body>
 </html>
