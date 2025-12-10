@@ -1,162 +1,127 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TypeScript Інтерактивна Сторінка</title>
-    <!-- W3.CSS framework and fonts -->
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css" />
-    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <style>
-        /* Base typography */
-        html, body, h1, h2, h3, h4, h5, h6 {
-            font-family: "Roboto", sans‑serif;
-        }
-        /* Custom header scroll effect */
-        .header-scrolled {
-            background-color: rgba(0, 0, 0, 0.8) !important;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        /* Posts cards */
-        .post-card {
-            background-color: #f5f5f5;
-            padding: 16px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        .post-card h3 {
-            margin-top: 0;
-        }
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 6px;
-        }
-        .close-modal {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close-modal:hover,
-        .close-modal:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мій блог</title>
+  <!-- W3.CSS library -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+  <!-- Custom styles -->
+  <style>
+    /* Add a darker background to the header when scrolled */
+    #header.scrolled {
+      background-color: #333 !important;
+      color: #fff;
+    }
+
+    /* Post card images fill the width */
+    .post-card img {
+      width: 100%;
+    }
+
+    /* Modal default hidden */
+    #modal {
+      display: none;
+    }
+  </style>
 </head>
-<body>
-    <!-- Top navigation bar -->
-    <div class="w3-top" id="topBar">
-        <div class="w3-bar w3-theme w3-left-align w3-large">
-            <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
-            <a href="#home" class="w3-bar-item w3-button w3-theme-l1">Головна</a>
-            <a href="#posts" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Публікації</a>
-            <a href="#about" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Про нас</a>
-            <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Контакти</a>
+<body class="w3-light-grey">
+  <!-- Modal structure -->
+  <div id="modal" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+      <header class="w3-container w3-teal">
+        <span id="modalClose" class="w3-button w3-display-topright">&times;</span>
+        <h2>Модальне вікно</h2>
+      </header>
+      <div class="w3-container">
+        <p>Це приклад модального вікна.</p>
+      </div>
+      <footer class="w3-container w3-teal">
+        <p>Підвал модального вікна</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Page header -->
+  <header id="header" class="w3-container w3-center w3-padding-32">
+    <h1><strong>МІЙ БЛОГ</strong></h1>
+    <p>Ласкаво просимо до мого блогу!</p>
+    <button id="openModalButton" class="w3-button w3-teal w3-margin-top">Відкрити модальне вікно</button>
+  </header>
+
+  <!-- Main content container -->
+  <div class="w3-content" style="max-width:1400px">
+    <div class="w3-row">
+      <!-- Blog entries column -->
+      <div class="w3-col l8 s12">
+        <div id="postsContainer">
+          <!-- JavaScript will populate posts here -->
         </div>
-    </div>
+      </div>
 
-    <!-- Sidebar for mobile -->
-    <nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
-        <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
-            <i class="fa fa-remove"></i>
-        </a>
-        <h4 class="w3-bar-item"><b>Меню</b></h4>
-        <a class="w3-bar-item w3-button w3-hover-black" href="#home" onclick="w3_close()">Головна</a>
-        <a class="w3-bar-item w3-button w3-hover-black" href="#posts" onclick="w3_close()">Публікації</a>
-        <a class="w3-bar-item w3-button w3-hover-black" href="#about" onclick="w3_close()">Про нас</a>
-        <a class="w3-bar-item w3-button w3-hover-black" href="#contact" onclick="w3_close()">Контакти</a>
-    </nav>
-
-    <!-- Overlay effect for small screens -->
-    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
-
-    <!-- Main content; margin-left will be applied for sidebar on large screens -->
-    <div class="w3-main" style="margin-left:250px" id="home">
-        <!-- Hero section -->
-        <header class="w3-container w3-center w3-padding-64">
-            <h1 class="w3-xxxlarge">Ласкаво просимо!</h1>
-            <p>Це приклад сторінки з TypeScript та W3.CSS.</p>
-            <button class="w3-button w3-teal w3-padding-large" onclick="openModal()">Відкрити модальне вікно</button>
-        </header>
-
-        <!-- Posts section -->
-        <section id="posts" class="w3-container w3-padding-64">
-            <h2 class="w3-text-teal">Останні публікації</h2>
-            <div id="postsContainer"></div>
-        </section>
-
-        <!-- About section -->
-        <section id="about" class="w3-container w3-padding-64 w3-light-grey">
-            <h2 class="w3-text-teal">Про нас</h2>
-            <p>Цей сайт демонструє використання готового шаблону та TypeScript для додавання інтерактивності. Тут ви можете побачити приклад завантаження даних, модальних вікон та ефектів прокручування.</p>
-        </section>
-
-        <!-- Contact section -->
-        <section id="contact" class="w3-container w3-padding-64">
-            <h2 class="w3-text-teal">Контакти</h2>
-            <p>Якщо у вас є питання, зв'яжіться з нами.</p>
-            <p><i class="fa fa-envelope w3-xlarge"></i> email@example.com</p>
-        </section>
-
-        <!-- Footer -->
-        <footer class="w3-container w3-theme-l2 w3-padding-32">
-            <h4>Футер</h4>
-            <p>Цей сайт створено з використанням <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">W3.CSS</a> та TypeScript.</p>
-        </footer>
-    </div>
-
-    <!-- Modal dialog -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h2>Привіт!</h2>
-            <p>Це модальне вікно відкривається за допомогою TypeScript.</p>
+      <!-- Sidebar column -->
+      <div class="w3-col l4">
+        <!-- About card -->
+        <div class="w3-card w3-margin w3-margin-top">
+          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&q=80" style="width:100%" alt="Про мене">
+          <div class="w3-container w3-white">
+            <h4><strong>Про мене</strong></h4>
+            <p>Це невеличкий опис автора цього блогу. Я люблю ділитися інформацією та вивчати нові технології.</p>
+          </div>
         </div>
+        <hr>
+
+        <!-- Popular posts card -->
+        <div class="w3-card w3-margin">
+          <div class="w3-container w3-padding">
+            <h4>Популярні пости</h4>
+          </div>
+          <ul class="w3-ul w3-hoverable w3-white">
+            <li class="w3-padding-16">
+              <img src="https://images.unsplash.com/photo-1519999482648-25049ddd37b1?auto=format&fit=crop&w=50&q=80" alt="Популярний пост" class="w3-left w3-margin-right" style="width:50px">
+              <span class="w3-large">Пост&nbsp;1</span><br>
+              <span>Опис посту&nbsp;1</span>
+            </li>
+            <li class="w3-padding-16">
+              <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=50&q=80" alt="Популярний пост" class="w3-left w3-margin-right" style="width:50px">
+              <span class="w3-large">Пост&nbsp;2</span><br>
+              <span>Опис посту&nbsp;2</span>
+            </li>
+            <li class="w3-padding-16">
+              <img src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=50&q=80" alt="Популярний пост" class="w3-left w3-margin-right" style="width:50px">
+              <span class="w3-large">Пост&nbsp;3</span><br>
+              <span>Опис посту&nbsp;3</span>
+            </li>
+          </ul>
+        </div>
+        <hr>
+
+        <!-- Tags card -->
+        <div class="w3-card w3-margin">
+          <div class="w3-container w3-padding">
+            <h4>Теги</h4>
+          </div>
+          <div class="w3-container w3-white">
+            <p>
+              <span class="w3-tag w3-black w3-margin-bottom">Технології</span>
+              <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Програмування</span>
+              <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Дизайн</span>
+              <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Подорожі</span>
+              <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Мистецтво</span>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Sidebar toggle script (from original template) -->
-    <script>
-        // Get the Sidebar and overlay
-        var mySidebar = document.getElementById("mySidebar");
-        var overlayBg = document.getElementById("myOverlay");
+  <!-- Footer -->
+  <footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
+    <p>Створено з любов’ю та W3.CSS.</p>
+    <p><a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-teal">w3.css</a></p>
+  </footer>
 
-        function w3_open() {
-            if (mySidebar.style.display === 'block') {
-                mySidebar.style.display = 'none';
-                overlayBg.style.display = "none";
-            } else {
-                mySidebar.style.display = 'block';
-                overlayBg.style.display = "block";
-            }
-        }
-        function w3_close() {
-            mySidebar.style.display = "none";
-            overlayBg.style.display = "none";
-        }
-    </script>
-    <!-- Compiled TypeScript bundle -->
-    <script src="dist/script.js"></script>
+  <!-- Compiled JavaScript -->
+  <script src="dist/script.js"></script>
 </body>
 </html>
