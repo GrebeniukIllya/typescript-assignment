@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Готовий Шаблон</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Ласкаво просимо</h1>
+    <nav>
+      <ul>
+        <li><a href="#posts">Статті</a></li>
+        <li><a href="#about">Про нас</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="hero">
+    <h2>Привіт!</h2>
+    <p>Це приклад макету сторінки з TypeScript.</p>
+    <button id="openModalBtn">Відкрити модальне вікно</button>
+  </section>
+
+  <section id="posts">
+    <h2>Публікації</h2>
+    <div id="postsContainer"></div>
+  </section>
+
+  <section id="about">
+    <h2>Про нас</h2>
+    <p>Ця сторінка була створена для демонстрації TypeScript, fetch API та анімацій.</p>
+  </section>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="closeModalBtn" class="close">&times;</span>
+      <p id="modalText">Це модальне вікно</p>
+    </div>
+  </div>
+
+  <script src="dist/script.js"></script>
+</body>
+</html>
