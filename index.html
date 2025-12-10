@@ -1,127 +1,72 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мій блог</title>
-  <!-- W3.CSS library -->
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
-  <!-- Custom styles -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Мій Блог – модульна версія</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
   <style>
-    /* Add a darker background to the header when scrolled */
-    #header.scrolled {
-      background-color: #333 !important;
+    /* Custom styles specific to this blog template */
+    .scrolled {
+      background-color: #333;
       color: #fff;
     }
-
-    /* Post card images fill the width */
     .post-card img {
       width: 100%;
     }
-
-    /* Modal default hidden */
+    /* Modal styling */
     #modal {
       display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
-<body class="w3-light-grey">
-  <!-- Modal structure -->
-  <div id="modal" class="w3-modal">
-    <div class="w3-modal-content w3-animate-top w3-card-4">
-      <header class="w3-container w3-teal">
-        <span id="modalClose" class="w3-button w3-display-topright">&times;</span>
-        <h2>Модальне вікно</h2>
-      </header>
-      <div class="w3-container">
-        <p>Це приклад модального вікна.</p>
-      </div>
-      <footer class="w3-container w3-teal">
-        <p>Підвал модального вікна</p>
-      </footer>
-    </div>
-  </div>
-
-  <!-- Page header -->
+<body>
+  <!-- Header / Navbar -->
   <header id="header" class="w3-container w3-center w3-padding-32">
-    <h1><strong>МІЙ БЛОГ</strong></h1>
-    <p>Ласкаво просимо до мого блогу!</p>
-    <button id="openModalButton" class="w3-button w3-teal w3-margin-top">Відкрити модальне вікно</button>
+    <h1><b>МІЙ БЛОГ</b></h1>
+    <p>Ласкаво просимо до мого блогу</p>
+    <button id="openModalButton" class="w3-button w3-blue">Відкрити модальне вікно</button>
   </header>
 
-  <!-- Main content container -->
-  <div class="w3-content" style="max-width:1400px">
-    <div class="w3-row">
-      <!-- Blog entries column -->
-      <div class="w3-col l8 s12">
-        <div id="postsContainer">
-          <!-- JavaScript will populate posts here -->
-        </div>
-      </div>
+  <!-- Blog posts section -->
+  <div class="w3-row" id="postsContainer" style="max-width: 1200px; margin: auto;"></div>
 
-      <!-- Sidebar column -->
-      <div class="w3-col l4">
-        <!-- About card -->
-        <div class="w3-card w3-margin w3-margin-top">
-          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&q=80" style="width:100%" alt="Про мене">
-          <div class="w3-container w3-white">
-            <h4><strong>Про мене</strong></h4>
-            <p>Це невеличкий опис автора цього блогу. Я люблю ділитися інформацією та вивчати нові технології.</p>
-          </div>
-        </div>
-        <hr>
-
-        <!-- Popular posts card -->
-        <div class="w3-card w3-margin">
-          <div class="w3-container w3-padding">
-            <h4>Популярні пости</h4>
-          </div>
-          <ul class="w3-ul w3-hoverable w3-white">
-            <li class="w3-padding-16">
-              <img src="https://images.unsplash.com/photo-1519999482648-25049ddd37b1?auto=format&fit=crop&w=50&q=80" alt="Популярний пост" class="w3-left w3-margin-right" style="width:50px">
-              <span class="w3-large">Пост&nbsp;1</span><br>
-              <span>Опис посту&nbsp;1</span>
-            </li>
-            <li class="w3-padding-16">
-              <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=50&q=80" alt="Популярний пост" class="w3-left w3-margin-right" style="width:50px">
-              <span class="w3-large">Пост&nbsp;2</span><br>
-              <span>Опис посту&nbsp;2</span>
-            </li>
-            <li class="w3-padding-16">
-              <img src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=50&q=80" alt="Популярний пост" class="w3-left w3-margin-right" style="width:50px">
-              <span class="w3-large">Пост&nbsp;3</span><br>
-              <span>Опис посту&nbsp;3</span>
-            </li>
-          </ul>
-        </div>
-        <hr>
-
-        <!-- Tags card -->
-        <div class="w3-card w3-margin">
-          <div class="w3-container w3-padding">
-            <h4>Теги</h4>
-          </div>
-          <div class="w3-container w3-white">
-            <p>
-              <span class="w3-tag w3-black w3-margin-bottom">Технології</span>
-              <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Програмування</span>
-              <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Дизайн</span>
-              <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Подорожі</span>
-              <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Мистецтво</span>
-            </p>
-          </div>
-        </div>
-      </div>
+  <!-- Modal Structure -->
+  <div id="modal">
+    <div class="modal-content">
+      <span id="modalClose" class="close">&times;</span>
+      <p>Це модальне вікно. Натисніть на хрестик або за межами вікна, щоб закрити його.</p>
     </div>
   </div>
 
   <!-- Footer -->
-  <footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
-    <p>Створено з любов’ю та W3.CSS.</p>
-    <p><a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-teal">w3.css</a></p>
+  <footer class="w3-container w3-center w3-light-grey w3-padding-32">
+    <p>© 2025 Мій Блог. Всі права захищені.</p>
   </footer>
 
-  <!-- Compiled JavaScript -->
-  <script src="dist/script.js"></script>
+  <!-- Main compiled script -->
+  <script src="dist/main.js"></script>
 </body>
 </html>
