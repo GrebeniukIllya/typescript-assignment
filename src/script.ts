@@ -1,86 +1,123 @@
-// TypeScript code to add interactive behaviour to the new W3.CSS‑based template.
+// TypeScript code for the blog template
+// This script adds scroll effects, a modal window, and dynamically fetches posts
+// from JSONPlaceholder, translates some English words to Ukrainian, and
+// renders them into the page. All variables are typed to leverage TypeScript's
+// static checking.
 
-// Function to handle scroll effect on the top navigation bar
-function initScrollEffect(): void {
-  const topBar = document.getElementById('topBar') as HTMLElement;
-  if (!topBar) return;
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 0) {
-      topBar.classList.add('header-scrolled');
-    } else {
-      topBar.classList.remove('header-scrolled');
-    }
-  });
+// Get references to DOM elements and assert their types
+const headerElem = document.getElementById('header') as HTMLElement;
+const modalElem = document.getElementById('modal') as HTMLElement;
+const openModalBtn = document.getElementById('openModalButton') as HTMLButtonElement;
+const modalCloseBtn = document.getElementById('modalClose') as HTMLElement;
+const postsContainer = document.getElementById('postsContainer') as HTMLElement;
+
+// Apply or remove a CSS class on the header when scrolling
+function onScroll(): void {
+  if (window.scrollY > 50) {
+    headerElem.classList.add('scrolled');
+  } else {
+    headerElem.classList.remove('scrolled');
+  }
 }
 
-// Functions to open and close the modal dialog
+// Show the modal
 function openModal(): void {
-  const modal = document.getElementById('myModal') as HTMLElement;
-  if (modal) {
-    modal.style.display = 'block';
-  }
+  modalElem.style.display = 'block';
 }
 
+// Hide the modal
 function closeModal(): void {
-  const modal = document.getElementById('myModal') as HTMLElement;
-  if (modal) {
-    modal.style.display = 'none';
-  }
+  modalElem.style.display = 'none';
 }
 
-// Close the modal if the user clicks outside of the modal content
-function initModalOutsideClick(): void {
-  const modal = document.getElementById('myModal') as HTMLElement;
-  if (!modal) return;
-  window.addEventListener('click', event => {
-    if (event.target === modal) {
-      closeModal();
-    }
-  });
+// Basic English → Ukrainian translation using a dictionary
+function translateText(text: string, dictionary: { [key: string]: string }): string {
+  return text
+    .split(/(\s+|\W+)/) // Split by whitespace or non-word characters, preserving separators
+    .map((token) => {
+      const lower = token.toLowerCase();
+      return dictionary[lower] ? dictionary[lower] : token;
+    })
+    .join('');
 }
 
-// Fetch posts from the API, translate them and render to the page
-async function loadPosts(): Promise<void> {
-  const postsContainer = document.getElementById('postsContainer');
-  if (!postsContainer) return;
+// Fetch posts from JSONPlaceholder and render them
+async function fetchAndRenderPosts(): Promise<void> {
   try {
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3');
+    const response: Response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3');
     const posts: Array<{ id: number; title: string; body: string }> = await response.json();
-    // Simple translation dictionaries for demonstration purposes
-    const titleTranslations: Record<string, string> = {
-      'sunt aut facere repellat provident occaecati excepturi optio reprehenderit': 'Сонце або робити, що відштовхує, забезпечує, за винятком опції відшкодування',
-      'qui est esse': 'Хто це є',
-      'ea molestias quasi exercitationem repellat qui ipsa sit aut': 'Ті незручності майже тренування, що відштовхує, коли вона сама сидить або'
+
+    // Translation dictionary for basic words
+    const dictionary: { [key: string]: string } = {
+      sunt: 'є',
+      aut: 'або',
+      facere: 'робити',
+      repellat: 'відштовхувати',
+      provident: 'передбачливий',
+      occaecati: 'прихований',
+      excepturi: 'виняток',
+      optio: 'опція',
+      reprehenderit: 'відповідальність',
+      qui: 'хто',
+      quia: 'тому що',
+      suscipit: 'приймає',
+      nam: 'назва',
+      voluptate: 'задоволення',
+      pariatur: 'участь',
+      vero: 'правда',
+      nostrum: 'наш',
+      et: 'і',
+      omnis: 'кожен',
+      iste: 'цей',
+      nisi: 'якщо не',
+      nihil: 'нічого'
     };
-    const bodyTranslations: Record<string, string> = {
-      'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto': 'Це тіло першого поста українською мовою. Тут може бути будь‑який текст, який описує зміст.',
-      'est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla': 'Це тіло другого поста українською мовою. Короткий приклад перекладу.',
-      'et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut': 'Це тіло третього поста українською мовою. Воно демонструє завантаження та відображення даних.'
-    };
+
+    // Clear any existing posts
     postsContainer.innerHTML = '';
-    posts.forEach(post => {
-      const translatedTitle = titleTranslations[post.title] || post.title;
-      const translatedBody = bodyTranslations[post.body] || post.body;
-      const card = document.createElement('div');
-      card.className = 'post-card w3-animate-bottom';
-      card.innerHTML = `
-        <h3>${translatedTitle}</h3>
-        <p>${translatedBody}</p>
-      `;
+
+    posts.forEach((post) => {
+      const translatedTitle: string = translateText(post.title, dictionary);
+      const translatedBody: string = translateText(post.body, dictionary);
+
+      // Create card
+      const card: HTMLDivElement = document.createElement('div');
+      card.className = 'w3-card-4 w3-margin w3-white post-card';
+
+      // Image for each post (random placeholder based on post ID)
+      const img: HTMLImageElement = document.createElement('img');
+      img.src = `https://picsum.photos/seed/${post.id}/800/400`;
+      img.alt = 'Зображення для посту';
+      card.appendChild(img);
+
+      // Container for text
+      const container: HTMLDivElement = document.createElement('div');
+      container.className = 'w3-container';
+      const h3: HTMLHeadingElement = document.createElement('h3');
+      h3.innerHTML = `<b>${translatedTitle}</b>`;
+      const p: HTMLParagraphElement = document.createElement('p');
+      p.textContent = translatedBody;
+      container.appendChild(h3);
+      container.appendChild(p);
+      card.appendChild(container);
+
       postsContainer.appendChild(card);
     });
   } catch (error) {
-    console.error('Помилка завантаження публікацій:', error);
-    postsContainer.innerHTML = '<p>Не вдалося завантажити публікації. Спробуйте пізніше.</p>';
+    console.error('Error fetching posts:', error);
   }
 }
 
-// Initialize all interactions when the DOM is ready
+// Initialize event listeners when the DOM content is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  initScrollEffect();
-  initModalOutsideClick();
-  loadPosts();
-  // Expose functions to global scope for inline HTML handlers
-  (window as any).openModal = openModal;
-  (window as any).closeModal = closeModal;
+  window.addEventListener('scroll', onScroll);
+  openModalBtn.addEventListener('click', openModal);
+  modalCloseBtn.addEventListener('click', closeModal);
+  // Close modal when clicking outside of it
+  window.addEventListener('click', (event: MouseEvent) => {
+    if (event.target === modalElem) {
+      closeModal();
+    }
+  });
+  fetchAndRenderPosts().catch((err) => console.error(err));
 });
