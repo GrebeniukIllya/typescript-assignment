@@ -1,74 +1,86 @@
-interface Post {
-    userId: number;
-    id: number;
-    title: string;
-    body: string;
-}
+// TypeScript code to add interactive behaviour to the new W3.CSS‑based template.
 
-// Toggle mobile navigation
-function toggleMobileNav(): void {
-    const mobileNav = document.getElementById('mobileNav') as HTMLElement;
-    if (mobileNav.classList.contains('w3-show')) {
-        mobileNav.classList.remove('w3-show');
-    } else {
-        mobileNav.classList.add('w3-show');
-    }
-}
-
-// Change navbar style on scroll
-window.addEventListener('scroll', () => {
-    const navbar = document.getElementById('navbar') as HTMLElement;
+// Function to handle scroll effect on the top navigation bar
+function initScrollEffect(): void {
+  const topBar = document.getElementById('topBar') as HTMLElement;
+  if (!topBar) return;
+  window.addEventListener('scroll', () => {
     if (window.scrollY > 0) {
-        navbar.classList.add('scrolled');
+      topBar.classList.add('header-scrolled');
     } else {
-        navbar.classList.remove('scrolled');
+      topBar.classList.remove('header-scrolled');
     }
-});
-
-// Translation dictionary for posts (by id)
-const translations: { [key: number]: { title: string; body: string } } = {
-    1: {
-        title: 'Перша стаття',
-        body: 'Це переклад першої статті. Вона містить демонстраційний текст українською мовою.',
-    },
-    2: {
-        title: 'Друга стаття',
-        body: 'Це переклад другої статті. Тут ви можете побачити приклад даних українською.',
-    },
-    3: {
-        title: 'Третя стаття',
-        body: 'Це переклад третьої статті. Цей текст також написаний українською.',
-    },
-};
-
-function translatePost(post: Post): Post {
-    const translated = translations[post.id];
-    if (translated) {
-        return { ...post, title: translated.title, body: translated.body };
-    }
-    return post;
+  });
 }
 
-async function fetchAndRenderPosts(): Promise<void> {
-    try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3');
-        const posts: Post[] = await response.json();
-        const container = document.getElementById('postsContainer') as HTMLElement;
-        container.innerHTML = '';
-        posts.forEach((post) => {
-            const translated: Post = translatePost(post);
-            const card = document.createElement('div');
-            card.className = 'post-card';
-            card.innerHTML = `<h3>${translated.title}</h3><p>${translated.body}</p>`;
-            container.appendChild(card);
-        });
-    } catch (error) {
-        console.error('Помилка завантаження постів:', error);
-        const container = document.getElementById('postsContainer') as HTMLElement;
-        container.innerHTML = '<p>Не вдалося завантажити дані.</p>';
-    }
+// Functions to open and close the modal dialog
+function openModal(): void {
+  const modal = document.getElementById('myModal') as HTMLElement;
+  if (modal) {
+    modal.style.display = 'block';
+  }
 }
 
+function closeModal(): void {
+  const modal = document.getElementById('myModal') as HTMLElement;
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Close the modal if the user clicks outside of the modal content
+function initModalOutsideClick(): void {
+  const modal = document.getElementById('myModal') as HTMLElement;
+  if (!modal) return;
+  window.addEventListener('click', event => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+}
+
+// Fetch posts from the API, translate them and render to the page
+async function loadPosts(): Promise<void> {
+  const postsContainer = document.getElementById('postsContainer');
+  if (!postsContainer) return;
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3');
+    const posts: Array<{ id: number; title: string; body: string }> = await response.json();
+    // Simple translation dictionaries for demonstration purposes
+    const titleTranslations: Record<string, string> = {
+      'sunt aut facere repellat provident occaecati excepturi optio reprehenderit': 'Сонце або робити, що відштовхує, забезпечує, за винятком опції відшкодування',
+      'qui est esse': 'Хто це є',
+      'ea molestias quasi exercitationem repellat qui ipsa sit aut': 'Ті незручності майже тренування, що відштовхує, коли вона сама сидить або'
+    };
+    const bodyTranslations: Record<string, string> = {
+      'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto': 'Це тіло першого поста українською мовою. Тут може бути будь‑який текст, який описує зміст.',
+      'est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla': 'Це тіло другого поста українською мовою. Короткий приклад перекладу.',
+      'et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut': 'Це тіло третього поста українською мовою. Воно демонструє завантаження та відображення даних.'
+    };
+    postsContainer.innerHTML = '';
+    posts.forEach(post => {
+      const translatedTitle = titleTranslations[post.title] || post.title;
+      const translatedBody = bodyTranslations[post.body] || post.body;
+      const card = document.createElement('div');
+      card.className = 'post-card w3-animate-bottom';
+      card.innerHTML = `
+        <h3>${translatedTitle}</h3>
+        <p>${translatedBody}</p>
+      `;
+      postsContainer.appendChild(card);
+    });
+  } catch (error) {
+    console.error('Помилка завантаження публікацій:', error);
+    postsContainer.innerHTML = '<p>Не вдалося завантажити публікації. Спробуйте пізніше.</p>';
+  }
+}
+
+// Initialize all interactions when the DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    fetchAndRenderPosts();
+  initScrollEffect();
+  initModalOutsideClick();
+  loadPosts();
+  // Expose functions to global scope for inline HTML handlers
+  (window as any).openModal = openModal;
+  (window as any).closeModal = closeModal;
 });
